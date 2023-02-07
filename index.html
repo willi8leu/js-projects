@@ -1,8 +1,21 @@
 <!DOCTYPE html>
 <html>
+  
   <head>
+    <meta charset="UTF-8">
+    <title>JS-Projects</title>
   </head>
+  
   <body>
-    <p>Hello World</p>
+    <h1>My projects</h1>
+    <ul>
+      <li><a href="tile-scrolling-platformer/index.html">tile-scrolling-platformer</a></li>
+    </ul>
+    <script>
+      const fs = require('fs');
+      const ul = document.querySelector('ul');
+      console.log(fs.readdirSync('/'));
+    </script>
   </body>
+
 </html>
