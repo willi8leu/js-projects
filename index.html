@@ -12,6 +12,8 @@
       <li><a href="tile-scrolling-platformer/index.html">tile-scrolling-platformer</a></li>
     </ul>
     <script>
+      import { createRequire } from 'module';
+      const require = createRequire(import.meta.url);
       const fs = require('fs');
       const ul = document.querySelector('ul');
       console.log(fs.readdirSync('/'));
