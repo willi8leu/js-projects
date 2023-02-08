@@ -7,4 +7,13 @@ const canvas = document.querySelector('#canvas'),
       background = document.querySelector('#background'),
       div = document.querySelector('#div');
 
-onload = () => ctx.fillRect(0,0,100,100);
+onload = function gameLoop() {
+    for (let y=0; y<CANVAS_HEIGHT/18; y++) {
+        for (let x=0; x<CANVAS_WIDTH/18; x++) {
+            randX = Math.floor(Math.random()*20)*18;
+            randY = Math.floor(Math.random()*9)*18;
+            ctx.drawImage(tilemap,randX,randY,18,18,x*18,y*18,18,18);
+        }
+    }
+    //this.requestAnimationFrame(gameLoop);
+}
