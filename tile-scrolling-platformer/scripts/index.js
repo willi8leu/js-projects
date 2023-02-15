@@ -1,38 +1,31 @@
-import {level} from "./level.js";
+import {_s} from './store.js';
+import {level} from './level.js';
+import {player} from './player.js';
 
-const canvas = document.querySelector('#canvas'),
-    ctx = canvas.getContext('2d'),
-    tiles = document.querySelector('#tiles'),
-    TILEMAP_WIDTH = 20,
-    TILEMAP_HEIGHT = 20,
-    TILE_WIDTH = 16,
-    TILE_HEIGHT = 16,
-    DRAW_TILE_WIDTH = 64,
-    DRAW_TILE_HEIGHT = 64,
-    GRIDMAP_WIDTH = 4,
-    GRIDMAP_HEIGHT = 4,
-    mod = (a,b) => ((a%b)+b)%b
-let gridmap = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]],
-    camX = 0,
-    camY = 0;
+_s.canvas.width = innerWidth-19;
+_s.canvas.height = innerHeight-38;
+_s.ctx.imageSmoothingEnabled = false;
 
-export {canvas,ctx,tiles,TILEMAP_WIDTH,TILEMAP_HEIGHT,TILE_WIDTH,TILE_HEIGHT,DRAW_TILE_WIDTH,DRAW_TILE_HEIGHT,GRIDMAP_WIDTH,GRIDMAP_HEIGHT,gridmap,camX,camY,mod};
+_s.DRAW_GRIDMAP_WIDTH = Math.ceil(_s.canvas.width/_s.DRAW_TILE_WIDTH)+1;
+_s.DRAW_GRIDMAP_HEIGHT = Math.ceil(_s.canvas.height/_s.DRAW_TILE_HEIGHT)+1;
+_s.GRIDMAP_WIDTH = 50;
+_s.GRIDMAP_HEIGHT = 50;
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-ctx.imageSmoothingEnabled = false;
+onkeydown = (event) => {if (!_s.keyPresses.includes(event.key.toLowerCase())) _s.keyPresses.push(event.key.toLowerCase())};
+onkeyup = (event) => {_s.keyPresses.splice(_s.keyPresses.indexOf(event.key.toLowerCase()),1)};
+
+level.generateLevel();
+_s.camX = _s.DRAW_TILE_WIDTH;
+_s.camY = (_s.GRIDMAP_HEIGHT*_s.DRAW_TILE_HEIGHT)-_s.canvas.height;
+
+console.log(_s);
+console.log(_s.canvas.width,(_s.GRIDMAP_WIDTH-1)*_s.DRAW_TILE_WIDTH);
 
 function gameLoop() {
+    _s.ctx.clearRect(0,0,_s.canvas.width,_s.canvas.height);
     level.drawTiles();
-    ctx.strokeStyle = 'purple';
-    ctx.beginPath();
-    ctx.moveTo(500,100);
-    ctx.lineTo(500+(3*64),100);
-    ctx.lineTo(500+(3*64),100+(3*64));
-    ctx.lineTo(500,100+(3*64))
-    ctx.lineTo(500,100);
-    ctx.stroke();
-    //this.requestAnimationFrame(gameLoop);
+    //level.camBounds();
+    _s.div.innerHTML = JSON.stringify(_s.keyPresses)+`, ${_s.playerX}, ${_s.playerY}`;
+    requestAnimationFrame(gameLoop);
 }
-
 onload = () => {gameLoop()};
