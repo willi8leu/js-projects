@@ -1,10 +1,9 @@
 import { aleaPRNG } from "./aleaPRNG-1.1.js";
-const out = document.querySelector('#out'),
-    inputs = document.querySelectorAll('.seed'),
-    button = document.querySelector('button');
-inputs.forEach(e => e.value=null)
+const inputs = document.querySelectorAll('.seed'),
+    button = document.querySelector('input[type="button"]');
+inputs.forEach(e => e.value=null);
 const length = 16;
-let text,htmlText,num;
+let prng;
 
 function copyToClipboard(text) {
     if (window.clipboardData && window.clipboardData.setData) {
@@ -30,11 +29,35 @@ function copyToClipboard(text) {
     }
 }
 
+function cycle(str) {
+    for (let i=str.split(/[a-z]/g).length-1; i<3; i++) {
+        str=subCycle(str,str.search(/[a-z]/g));
+    }
+}
+
+function subCycle(str,minIdx) {
+    let count = str.split(/\d/g).length-1;
+    let maxIdx = str.search(/\d/g);
+    if (str.split(/[a-z]/g).length-1 > count) {
+        count = str.split(/[a-z]/g).length-1;
+        maxIdx = str.search(/[a-z]/g);
+    }
+    if (str.split(/[A-Z]/g).length-1 > count) {
+        count = str.split(/[A-Z]/g).length-1;
+        maxIdx = str.search(/[A-Z]/g);
+    }
+    if (str.split(/[^\w\d\s]/g).length-1 > count) {
+        count = str.split(/[^\w\d\s]/g).length-1;
+        maxIdx = str.search(/[^\w\d\s]/g);
+    }
+    return str.split('').splice(maxIdx,1,prng.range())
+}
+
 function update() {
-    num = aleaPRNG(inputs[0].value,inputs[1].value,inputs[2].value)
-    text = [];
+    prng = aleaPRNG(inputs[0].value,inputs[1].value,inputs[2].value)
+    let text = [];
     for (let i=0; i<length; i++) {
-        text.push(num.range(33,126))
+        text.push(prng.range(33,126))
     }
     text = String.fromCharCode(...text);
     button.value = text;
